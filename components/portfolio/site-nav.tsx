@@ -31,16 +31,16 @@ export function SiteNav({ children }: { children?: ReactNode }) {
     const anchor = target?.closest?.('a[href^="#"]');
     if (!anchor) return;
 
-    // Only the overlay panel's links need this; the header brand link is fine.
-    if (!anchor.closest('[role="navigation"]')) return;
-
     const hash = anchor.getAttribute("href");
     if (!hash || hash === "#") return;
 
-    const destination = document.getElementById(hash.slice(1));
+    // No-op when the panel is closed: the Escape listener only exists while
+    // the focus trap is active.
     document.dispatchEvent(
       new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
     );
+
+    const destination = document.getElementById(hash.slice(1));
     destination?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 

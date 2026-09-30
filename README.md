@@ -142,9 +142,11 @@ environment is safe — it will just rewrite the same token block.
   work blocks, white over the dark nav panel, contact block and footer.
 - **Closing on link click:** when the panel is driven by the `children` render
   prop (needed for the image/social layout), the block's links don't dismiss the
-  menu. Anchors inside the overlay are intercepted and the panel is dismissed
-  through the component's own Escape path — the handler its focus trap already
-  listens for — then the target section is scrolled to.
+  menu. Hash anchors are intercepted (`onClickCapture`) and the panel is
+  dismissed through the component's own Escape path — the handler its focus trap
+  already listens for, so it is a no-op while the panel is closed — then the
+  target section is scrolled to. That covers the panel links and the header
+  brand link alike.
 
 ### Cinematic Orbit Hero — `app/page.tsx`
 
