@@ -13,15 +13,15 @@ export function StudioSection() {
 
       <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-16">
         <div className="grid gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
-          <div className="flex flex-col gap-8">
+          <div className="flex min-w-0 flex-col gap-8">
             <div className="flex items-center gap-3">
               <LogoIcon className="size-6 text-neutral-900" />
-              <span className="text-[11px] font-medium uppercase tracking-[0.32em] text-neutral-500">
+              <span className="text-[11px] font-medium uppercase tracking-[0.32em] text-neutral-600">
                 The studio
               </span>
             </div>
 
-            <h2 className="max-w-2xl text-3xl leading-[1.05] font-medium tracking-tighter sm:text-5xl">
+            <h2 className="max-w-2xl text-3xl leading-[1.05] font-medium tracking-tighter text-balance sm:text-5xl">
               One practice, from first sketch to shipped build.
             </h2>
 
@@ -29,27 +29,37 @@ export function StudioSection() {
               {person.bio.map((paragraph) => (
                 <p
                   key={paragraph.slice(0, 24)}
-                  className="text-sm leading-relaxed font-light text-neutral-600 sm:text-base"
+                  className="text-sm leading-relaxed font-light text-pretty text-neutral-600 sm:text-base"
                 >
                   {paragraph}
                 </p>
               ))}
             </div>
 
-            <div className="flex flex-wrap items-center gap-x-8 gap-y-3 text-sm font-light text-neutral-500">
+            <div className="flex flex-wrap items-center gap-x-8 gap-y-3 text-sm font-light text-neutral-600">
               <span className="inline-flex items-center gap-2">
-                <span className="size-1.5 rounded-full bg-emerald-500" />
-                Available for Q1 projects
+                {/* Colour is a redundant cue only — the text carries the meaning. */}
+                <span
+                  className="size-1.5 rounded-full bg-emerald-500"
+                  aria-hidden="true"
+                />
+                Available for Q1&nbsp;projects
               </span>
               <span>{person.location}</span>
             </div>
           </div>
 
-          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl ring-1 ring-black/5">
+          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl ring-1 ring-black/5 shadow-sm shadow-neutral-900/5">
+            {/* Explicit dimensions + lazy loading: no CLS, nothing fetched
+                before it is needed. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={navImages[1]}
-              alt="Studio still"
+              alt="Studio workspace: sketches, a display and a laptop mid-project"
+              width={900}
+              height={1200}
+              loading="lazy"
+              decoding="async"
               className="absolute inset-0 h-full w-full object-cover"
             />
           </div>
@@ -64,7 +74,7 @@ export function StudioSection() {
               <dt className="text-sm font-medium tracking-tight">
                 {capability.title}
               </dt>
-              <dd className="mt-2 text-sm leading-relaxed font-light text-neutral-600">
+              <dd className="mt-2 text-sm leading-relaxed font-light text-pretty text-neutral-600">
                 {capability.body}
               </dd>
             </div>

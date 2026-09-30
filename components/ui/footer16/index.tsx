@@ -81,7 +81,7 @@ const defaultSocials: Footer16Social[] = [
   { label: 'LinkedIn', href: '#', icon: 'linkedin' },
 ];
 
-const backgroundUrl = 'https://assets.watermelon.sh/footer-16-bg.avif';
+const backgroundUrl = '/footer-bg.webp';
 
 const sectionVariants: Variants = {
   hidden: { opacity: 0 },

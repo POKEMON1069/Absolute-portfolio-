@@ -34,10 +34,10 @@ export default function DemosPage() {
   return (
     <main className="mx-auto flex w-full max-w-4xl flex-col gap-10 px-6 py-24">
       <header className="flex flex-col gap-3">
-        <h1 className="text-4xl font-medium tracking-tighter">
+        <h1 className="text-4xl font-medium tracking-tighter text-balance">
           Component demos
         </h1>
-        <p className="max-w-xl text-sm leading-relaxed font-light text-neutral-500">
+        <p className="max-w-xl text-sm leading-relaxed font-light text-pretty text-neutral-600">
           Each integrated block, rendered on its own with the props it shipped
           with.
         </p>
@@ -53,7 +53,7 @@ export default function DemosPage() {
               <span className="text-base font-medium tracking-tight">
                 {demo.title}
               </span>
-              <span className="text-sm font-light text-neutral-500">
+              <span className="text-sm font-light text-neutral-600">
                 {demo.body}
               </span>
             </Link>

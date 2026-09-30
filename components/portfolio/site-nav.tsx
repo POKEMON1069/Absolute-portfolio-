@@ -1,31 +1,48 @@
 "use client";
 
-import { useCallback, type MouseEvent, type ReactNode } from "react";
+import {
+  useCallback,
+  useState,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
 
 import ImmersiveFullscreenNav from "@/components/ui/immersive-full-screen-nav";
+import { BrandAssetsMenu } from "@/components/portfolio/brand-assets";
+import { usePrimaryNavA11y, useTranslateGuard } from "@/hooks/use-translate-guard";
 import { navImages, navLinks, navSocials, person } from "@/lib/portfolio-data";
 
 /**
  * The site's navigation, built on `ImmersiveFullscreenNav`.
  *
- * Two integration details:
+ * Three integration details, all additive — the block's own markup is untouched:
  *
- * 1. `headerClassName` is the component's own escape hatch for the fixed
- *    header. `mix-blend-difference` + a forced white fill makes the header
- *    auto-invert against whatever section it floats over: near-black over the
- *    light hero/work/studio blocks, white over the dark nav panel, contact
- *    block and footer. (The component's closed-state colour is fixed black, so
- *    the `!important` utilities are what let the header survive dark sections.)
+ * 1. `headerClassName` is the component's escape hatch for the fixed header.
+ *    `mix-blend-difference` + forced white fills make the header auto-invert
+ *    against whatever section it floats over: near-black over the light
+ *    hero/work/studio blocks, white over the dark nav panel, contact block and
+ *    footer.
  *
- * 2. When the panel is driven by the `children` render prop (as below, to get
- *    the full image/social layout), its links don't close the menu the way the
- *    plain `links` list does. Links are therefore intercepted here and the
- *    panel is dismissed through the component's own Escape path — the same
- *    handler the focus trap already listens for — then the anchor is scrolled
- *    to. Programmatic scrolling still works while the component holds
- *    `body { overflow: hidden }`.
+ * 2. Links inside the panel: when the panel is driven by the `children` render
+ *    prop (needed for the image/social layout) its links don't dismiss the
+ *    menu. Hash anchors are intercepted and the panel is closed through the
+ *    component's own Escape path — the handler its focus trap already listens
+ *    for, so it is a no-op while the panel is closed — then the target section
+ *    is scrolled to. Scrolling honours `prefers-reduced-motion`.
+ *
+ * 3. Right-clicking the logo opens the brand-assets menu (see
+ *    `brand-assets.tsx`), so the SVG is reachable from anywhere on the page.
  */
 export function SiteNav({ children }: { children?: ReactNode }) {
+  const [brandMenu, setBrandMenu] = useState<{
+    x: number;
+    y: number;
+    opener: HTMLElement;
+  } | null>(null);
+
+  useTranslateGuard();
+  usePrimaryNavA11y();
+
   const onLinkActivate = useCallback((event: MouseEvent<HTMLDivElement>) => {
     const target = event.target as HTMLElement | null;
     const anchor = target?.closest?.('a[href^="#"]');
@@ -40,12 +57,29 @@ export function SiteNav({ children }: { children?: ReactNode }) {
       new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
     );
 
-    const destination = document.getElementById(hash.slice(1));
-    destination?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const reduceMotion = window.matchMedia?.(
+      "(prefers-reduced-motion: reduce)",
+    )?.matches;
+
+    document.getElementById(hash.slice(1))?.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start",
+    });
+  }, []);
+
+  const onContextMenu = useCallback((event: MouseEvent<HTMLDivElement>) => {
+    const header = (event.target as HTMLElement | null)?.closest?.("header");
+    if (!header) return;
+
+    const opener = header.querySelector<HTMLElement>("a[href]");
+    if (!opener) return;
+
+    event.preventDefault();
+    setBrandMenu({ x: event.clientX, y: event.clientY, opener });
   }, []);
 
   return (
-    <div onClickCapture={onLinkActivate}>
+    <div onClickCapture={onLinkActivate} onContextMenuCapture={onContextMenu}>
       <ImmersiveFullscreenNav
         navConfig={{
           brand: person.firstName,
@@ -65,6 +99,13 @@ export function SiteNav({ children }: { children?: ReactNode }) {
           socials: navSocials,
         }}
       />
+
+      <BrandAssetsMenu
+        point={brandMenu}
+        returnFocusTo={brandMenu?.opener}
+        onClose={() => setBrandMenu(null)}
+      />
+
       {children}
     </div>
   );

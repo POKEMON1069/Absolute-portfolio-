@@ -121,9 +121,17 @@
   }
 
   html {
+    color-scheme: light;
     scroll-behavior: smooth;
+    /* Reserve the gutter so locking scroll (nav panel open) can't shift the page. */
+    scrollbar-gutter: stable;
+    /* 100vw full-bleed sections must never create a horizontal scrollbar.
+       `clip` (not `hidden`) so `position: sticky` keeps working. */
+    overflow-x: clip;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    /* Tap highlight is replaced by our own hover/active states. */
+    -webkit-tap-highlight-color: transparent;
   }
 
   body {
@@ -132,25 +140,75 @@
       "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   }
 
-  /* Anchored sections clear the fixed 5rem nav header. */
-  :where(section, div)[id] {
+  /* No double-tap-zoom delay on anything tappable. */
+  a,
+  button,
+  [role="button"],
+  [role="menuitem"],
+  summary,
+  label,
+  input,
+  select,
+  textarea {
+    touch-action: manipulation;
+  }
+
+  /* One consistent focus ring for every control in the app — including the
+     vendored blocks, whose own markup we don't modify. `:focus-visible` keeps
+     it off pointer users. */
+  :where(
+    a,
+    button,
+    [role="button"],
+    [role="menuitem"],
+    summary,
+    input,
+    select,
+    textarea,
+    [tabindex]
+  ):focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  /* Anchored sections/headings clear the fixed 5rem nav header. */
+  [id] {
     scroll-margin-top: 5rem;
+  }
+
+  /* The full-screen nav panel is a scrollable overlay: don't chain its scroll
+     through to the page behind it. */
+  nav[role="navigation"][aria-hidden] {
+    overscroll-behavior: contain;
+  }
+
+  /* Full-bleed layout vs. notches / rounded corners. `env()` resolves to 0 on
+     hardware without insets, so these are no-ops on desktop. */
+  header.fixed {
+    padding-left: max(2rem, env(safe-area-inset-left));
+    padding-right: max(2rem, env(safe-area-inset-right));
+  }
+
+  footer {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
     }
+
+    /* Collapse CSS-driven motion to an instant state change. (The JS-driven
+       blocks each check the media query themselves; the footer's Motion
+       reveals are reduced separately via <MotionConfig reducedMotion="user">.) */
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
-/* Tailwind v4 strips typed colours from a few component classes that came in
-   with the integrated blocks — keep the raw opacity values working. */
-@supports (color: color-mix(in oklab, white, black)) {
-  .text-balance {
-    text-wrap: balance;
-  }
-  .text-pretty {
-    text-wrap: pretty;
-  }
-}

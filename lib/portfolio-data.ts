@@ -8,7 +8,13 @@ import type { LiquidGlassCarouselItem } from "@/components/ui/liquid-glass-carou
  * Everything below is plain data — edit it here and every block on the page
  * updates. The values marked `TODO` are placeholders: swap in the real links,
  * handles and project names before shipping.
+ *
+ * Typographic notes: user-visible copy uses curly apostrophes (’) and
+ * non-breaking spaces (\u00A0) to keep glued terms — "Q1 projects",
+ * "IST / UTC+5:30", "© 2026" — from breaking across lines.
  */
+
+const nbsp = "\u00A0";
 
 export const person = {
   name: "Aayushman Chandra",
@@ -22,7 +28,7 @@ export const person = {
   intro:
     "I design and build brand systems, product interfaces and the immersive web experiences that hold them together — from the first sketch to the last commit.",
   bio: [
-    "I'm Aayushman Chandra, an independent designer and developer. I work with founders and small teams to shape products that feel considered from the very first screen.",
+    "I’m Aayushman Chandra, an independent designer and developer. I work with founders and small teams to shape products that feel considered from the very first screen.",
     "My practice sits between design and engineering: type, motion, layout systems and the front-end code that makes them real. Nothing hands off — the same person who draws the grid ships it.",
   ],
   /** Hero stat strip. */
@@ -30,7 +36,7 @@ export const person = {
     { label: "Years practising", value: "08+" },
     { label: "Products shipped", value: "40+" },
     { label: "Brand systems", value: "25" },
-    { label: "Based in", value: "IST / UTC+5:30" },
+    { label: `Based in${nbsp}(IST)`, value: "UTC+5:30" },
   ],
 } as const;
 
@@ -76,6 +82,13 @@ export const navSocials = [
   { type: "linkedin", href: "https://linkedin.com" }, // TODO: real profile
 ];
 
+/** Text links used by the contact block (and mirrored in the footer). */
+export const socialLinks = [
+  { label: "Instagram", href: "https://instagram.com" }, // TODO: real handle
+  { label: "X", href: "https://x.com" }, // TODO: real handle
+  { label: "LinkedIn", href: "https://linkedin.com" }, // TODO: real profile
+];
+
 /* ------------------------------------------------------------------ *
  * Work — wired into the LiquidGlassCarousel
  * ------------------------------------------------------------------ */
@@ -105,8 +118,8 @@ export const footerColumns: Footer16Column[] = [
     links: [
       { label: "Selected Projects", href: "#work" },
       { label: "Case Studies", href: "#work" },
-      { label: "Playground", href: "#top" },
       { label: "Availability", href: "#contact" },
+      { label: "Playground", href: "/demos" },
     ],
   },
   {
@@ -122,7 +135,7 @@ export const footerColumns: Footer16Column[] = [
     title: "Elsewhere",
     links: [
       { label: "LinkedIn", href: "https://linkedin.com" }, // TODO
-      { label: "X / Twitter", href: "https://x.com" }, // TODO
+      { label: "X", href: "https://x.com" }, // TODO
       { label: "Instagram", href: "https://instagram.com" }, // TODO
       { label: "Dribbble", href: "https://dribbble.com" }, // TODO
     ],
@@ -130,9 +143,9 @@ export const footerColumns: Footer16Column[] = [
 ];
 
 export const footerLegalLinks = [
-  { label: "Privacy Policy", href: "#" },
-  { label: "Terms of Service", href: "#" },
-  { label: "Colophon", href: "#" },
+  { label: "Privacy Policy", href: "/brand" }, // TODO: real policy page
+  { label: "Terms of Service", href: "/brand" }, // TODO: real terms page
+  { label: "Brand Assets", href: "/brand" },
 ];
 
 export const footerSocials: Footer16Social[] = [
@@ -142,17 +155,17 @@ export const footerSocials: Footer16Social[] = [
   { label: "LinkedIn", href: "https://linkedin.com", icon: "linkedin" }, // TODO
 ];
 
-export const footerCopyright =
-  "© 2026 Aayushman Chandra. All rights reserved.";
+export const footerCopyright = `©${nbsp}2026 Aayushman Chandra. All rights reserved.`;
 
 export const footerTagline =
   "Independent designer and developer building brand systems\nand product interfaces — everything a launch needs,\nunder one roof.";
 
 /**
- * Footer backdrop.
+ * Footer backdrop — `public/footer-bg.webp`, 1915×821, 22 KB.
  *
- * The supplied PNG lives at `public/footer-bg.png`. Drop your own artwork in
- * that path (same filename) and it is picked up automatically — alternatively
- * point this constant at any remote URL.
+ * Drop your own artwork in at that path (same filename) and the footer picks it
+ * up with no code change; alternatively point this constant at any remote URL.
+ * If you supply a `.png`/`.jpg` instead, just update the extension here — WebP
+ * is used because the source PNG was 2.1 MB and this is visually identical.
  */
-export const footerBackgroundImage = "/footer-bg.png";
+export const footerBackgroundImage = "/footer-bg.webp";

@@ -31,6 +31,7 @@ app/
   page.tsx              the portfolio page (composes everything)
   globals.css           Tailwind v4 + shadcn design tokens
   icon.svg              favicon (the supplied logo mark)
+  brand/page.tsx        brand assets: downloads, colour, copy-SVG
   demos/                one route per block, plus /demos index
 assets/
   logo-icon.tsx         ← your supplied 4-point spark mark
@@ -40,12 +41,14 @@ components/
   portfolio/            site-level sections built on top of them
 hooks/
   use-in-view.ts        defers the WebGL carousel until it is near the viewport
+  use-translate-guard.ts  translate="no" on brand nodes + nav landmark/control names
 lib/
   utils.ts              cn() — the standard shadcn helper
   portfolio-data.ts     all copy, projects, links, footer columns
 public/
-  footer-bg.png         footer backdrop artwork
+  footer-bg.webp        footer backdrop artwork (22 KB)
   logo-icon.svg         the mark as a plain file
+  pattern-mark.svg      the secondary mark as a plain file
 ```
 
 ### Component / style default paths
@@ -269,7 +272,117 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 
 ---
 
-## 7. Page order
+## 7. Web Interface Guidelines audit
+
+The UI was reviewed against the [Web Interface Guidelines](https://github.com/vercel-labs/web-interface-guidelines)
+(`npx skills add https://github.com/vercel-labs/agent-skills --skill web-design-guidelines`).
+Findings were fixed in the base layer, the app shell and the portfolio wrappers;
+the vendored blocks were left intact — see the accepted deviations below.
+
+### Fixed
+
+**Focus, keyboard & touch**
+- One global `:focus-visible` ring in `app/globals.css` covers every control,
+  *including* the vendored blocks. The only `outline-none` in the codebase
+  (`liquid-glass-carousel.tsx:1483`) already pairs with a
+  `focus-visible:ring-*` replacement, so it is not a violation.
+- `touch-action: manipulation` on all interactive elements; `-webkit-tap-
+  highlight-color: transparent` (we draw our own hover/active states).
+- `scroll-margin-top: 5rem` on `[id]` so the fixed header never covers an
+  anchored section or a focused element.
+- The full-screen nav panel traps focus and returns it to the hamburger (in the
+  block); its landmarks/controls were given accurate names at runtime —
+  `nav[role="navigation"]` → `aria-label="Main"`, and the hamburger's label
+  follows its state ("Open menu" / "Close menu") — via
+  `hooks/use-translate-guard.ts`.
+
+**Layout, safe areas & scrollbars**
+- `overflow-x: clip` on `html` (sticky-safe) so the blocks' `100vw` rows can't
+  produce a horizontal scrollbar; `scrollbar-gutter: stable` so locking scroll
+  for the nav panel can't shift the page.
+- `overscroll-behavior: contain` on the nav overlay.
+- `viewport-fit=cover` + `env(safe-area-inset-*)` padding on the fixed header
+  and the footer.
+- Zoom is left fully enabled (no `maximum-scale`).
+
+**Theming & browser UI**
+- `color-scheme: light` on `<html>`, `<meta name="theme-color" content="#f8fafc">`
+  (matches the page canvas), and no `<select>` elements to patch.
+
+**Motion**
+- `<MotionConfig reducedMotion="user">` around the footer's Motion reveals
+  (the block doesn't check the media query itself); a base-layer
+  `prefers-reduced-motion` block collapses CSS transitions/animations; the
+  in-page anchor scrolling in `site-nav.tsx` switches `smooth` → `auto`. The
+  hero, carousel and nav each check the media query internally.
+
+**Typography & copy**
+- Curly apostrophes throughout user-visible copy (`Let’s`, `I’m`).
+- Non-breaking spaces in glued terms: `Q1&nbsp;projects`, `©&nbsp;2026`,
+  `Based in&nbsp;(IST)`. Plus `tabular-nums` on every number column.
+- `text-balance` on headings, `text-pretty` on body copy.
+- Loading state keeps its label: the copy button shows a spinner and stays
+  labelled "Copy SVG", with the state announced through an `aria-live` region —
+  instead of swapping the label to "Copying…".
+
+**Semantics & a11y**
+- Skip link → `#top` (the hero is `tabIndex={-1}` so it can receive focus).
+- Exactly one `<h1>` per page; `h2` per section, `h3` in the footer.
+- Icon-only controls named; decorative marks `aria-hidden`; counts and status
+  never rely on colour alone.
+- Brand name wrapped in `translate="no"` (statically on the `h1`, at runtime for
+  the vendored header/footer nodes) so auto-translate can't garble it.
+
+**Performance & assets**
+- Preconnect to the two media origins (with `crossorigin`, matching how three.js
+  and `<img>` fetch them).
+- The studio image has explicit `width`/`height` + `loading="lazy"`.
+- Footer backdrop shipped as WebP: **2.1 MB PNG → 22 KB**, visually identical.
+- The WebGL carousel mounts only when the section is within 400px of the
+  viewport (`hooks/use-in-view.ts`) — no GPU context on first load.
+
+**Navigation, state & links**
+- Every navigational control is an `<a>`/`<Link>` (Cmd/Ctrl-click and
+  middle-click work); no `onClick` on a `<div>` for navigation.
+- Depth: the new `/brand` page, reachable from the footer and from
+  right-clicking the nav logo, which opens a `role="menu"` brand-assets popover
+  with download + copy-SVG actions.
+
+### Accepted deviations (vendored block interiors)
+
+Deliberately left as delivered, per "use each component exactly as specified":
+
+| Location | Finding | Why it's not a live bug |
+| --- | --- | --- |
+| `components/ui/cinematic-orbit-hero.tsx:139` | `transition-all` | Animates only shadows/transform in practice; the card's box doesn't change. |
+| `components/ui/cinematic-orbit-hero.tsx:141` | `<img>` without `width`/`height` | Cards are absolutely positioned inside a fixed `100svh` wrapper, sized in `vw`/`vh` — no layout shift is possible. |
+| `components/ui/immersive-full-screen-nav.tsx:343,349,355` | `transition-all` on the hamburger bars | `translate`/`rotate`/`scale` only, each with `motion-reduce:transition-none`. |
+| `components/ui/immersive-full-screen-nav.tsx:674` | `<img>` without dimensions, no `loading="lazy"` | Fixed `h-[18vw] w-[25vw]` frame; the panel is closed until the user opens it. Add `loading="lazy"` if you want the two stills deferred. |
+| `components/ui/liquid-glass-carousel.tsx` | Canvas is `aria-hidden`; gesture control has no equivalent tap target inside the canvas | The wrapper is a labelled `role="region"` with a polite live region, and `←`/`→`/`Esc` are wired; a click on any panel also works. |
+| `components/ui/footer16/index.tsx` | Reveals don't self-check `prefers-reduced-motion` | Handled from outside via `<MotionConfig reducedMotion="user">`. |
+
+Two edits *were* made inside a vendored file, both required and both noted in
+§6: the `"use client"` directive in `footer16/index.tsx`, and its
+`backgroundUrl` constant now pointing at this site's own `/footer-bg.webp`
+instead of the demo CDN (so it matches `footerBackgroundImage`).
+
+### Verified by hand
+
+- Footer small text on the darkened backdrop: ≈ **4.7:1** (zinc-400/76 over
+  `rgba(9,10,14,0.9)`), so it clears AA. Link hovers *increase* contrast.
+- Contact-block grey text on `#0b0b0e`: zinc-400 → **6.3:1**; the `zinc-500`
+  span is large display text (≥ 4xl), clearing the 3:1 large-text threshold.
+- Light sections: `neutral-600` on `#f8fafc`/white → **7.4–7.8:1**. Small
+  uppercase labels were raised from `neutral-500` (4.47:1 — just under AA) to
+  `neutral-600` because of this check.
+
+`npm run lint`, `npx tsc --noEmit` and `npm run build` all pass. The carousel
+logs one benign WebGL shader-compile note (a loop-varying-derivative warning
+from the block's own GLSL) — it does not affect rendering.
+
+---
+
+## 8. Page order
 
 ```
 SiteNav (fixed)
