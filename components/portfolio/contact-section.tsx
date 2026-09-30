@@ -18,14 +18,14 @@ export function ContactSection() {
       <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-14">
         <div className="flex items-center gap-3">
           <LogoIcon className="size-6 text-zinc-100" />
-          <span className="text-[11px] font-medium uppercase tracking-[0.32em] text-zinc-400">
+          <span className="text-[11px] font-medium uppercase tracking-[0.32em] text-zinc-300">
             Contact
           </span>
         </div>
 
         <h2 className="max-w-4xl text-4xl leading-[0.98] font-medium tracking-tighter text-balance sm:text-6xl lg:text-7xl">
           Let’s build something
-          <span className="text-zinc-500"> worth shipping.</span>
+          <span className="text-zinc-400"> worth shipping.</span>
         </h2>
 
         <div className="flex flex-col gap-10 border-t border-white/10 pt-8 sm:flex-row sm:items-end sm:justify-between">
@@ -48,14 +48,14 @@ export function ContactSection() {
                 <li key={social.label}>
                   <a
                     href={social.href}
-                    className="inline-flex min-h-11 items-center text-sm font-light text-zinc-400 transition-colors duration-200 ease-out hover:text-zinc-50 hover:underline hover:underline-offset-4"
+                    className="inline-flex min-h-11 items-center text-sm font-light text-zinc-300 transition-colors duration-200 ease-out hover:text-zinc-50 hover:underline hover:underline-offset-4"
                   >
                     {social.label}
                   </a>
                 </li>
               ))}
             </ul>
-            <p className="text-sm font-light text-zinc-400">
+            <p className="text-sm font-light text-zinc-300">
               {person.location}
             </p>
           </div>

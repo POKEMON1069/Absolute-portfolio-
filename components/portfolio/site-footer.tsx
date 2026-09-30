@@ -29,7 +29,9 @@ export function SiteFooter() {
   return (
     <MotionConfig reducedMotion="user">
       <Footer16
-        brandName={person.name.toUpperCase()}
+        // Non-breaking space: the wordmark and the brand row must never break
+        // the name across lines.
+        brandName={person.name.replace(/ /g, "\u00A0").toUpperCase()}
         tagline={footerTagline}
         columns={footerColumns}
         legalLinks={footerLegalLinks}

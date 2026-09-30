@@ -73,11 +73,10 @@ export default function RootLayout({
           />
         ))}
 
-        {/* First tab stop: skip the fixed header and jump into the content. */}
-        <a
-          href="#top"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-100 focus:inline-flex focus:min-h-11 focus:items-center focus:rounded-full focus:bg-neutral-900 focus:px-5 focus:text-sm focus:font-medium focus:text-slate-50"
-        >
+        {/* First tab stop: skip the fixed header and jump into the content.
+            Styled in globals.css so its hidden/visible states don't depend on
+            utility ordering. */}
+        <a href="#top" className="skip-link">
           Skip to content
         </a>
 

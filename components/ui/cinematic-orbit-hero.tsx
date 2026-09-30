@@ -142,6 +142,8 @@ function Card({ card, progress, pointer, isSpreadActive, isMobile }: any) {
           src={item.src}
           alt={item.alt}
           draggable={false}
+          loading="lazy"
+          decoding="async"
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 hover:scale-110"
         />
       </div>

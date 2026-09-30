@@ -47,8 +47,8 @@ export function WorkSection() {
           </span>
         </div>
         <p className="max-w-xl text-sm leading-relaxed font-light text-pretty text-neutral-600">
-          Scroll, drag or use the arrow keys to move through the row. Click a
-          panel to pull it forward, then press Escape to send it back.
+          Scroll, drag or use ←/→ to move the row. Select a panel to focus it,
+          then press Escape to close.
         </p>
       </div>
 

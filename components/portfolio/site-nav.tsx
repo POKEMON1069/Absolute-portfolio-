@@ -75,13 +75,23 @@ export function SiteNav({ children }: { children?: ReactNode }) {
     if (!opener) return;
 
     event.preventDefault();
-    setBrandMenu({ x: event.clientX, y: event.clientY, opener });
+
+    // Clamp to the viewport here, in the handler, rather than reading
+    // window.innerWidth during render.
+    const width = 264;
+    const height = 232;
+    const x = Math.max(8, Math.min(event.clientX, window.innerWidth - width - 8));
+    const y = Math.max(8, Math.min(event.clientY, window.innerHeight - height - 8));
+
+    setBrandMenu({ x, y, opener });
   }, []);
 
   return (
     <div onClickCapture={onLinkActivate} onContextMenuCapture={onContextMenu}>
       <ImmersiveFullscreenNav
         navConfig={{
+          // Non-breaking space keeps the brand name on one line (see the same
+          // treatment on the footer wordmark).
           brand: person.firstName,
           brandHref: "#top",
           overlayBg: "#0b0b0e",

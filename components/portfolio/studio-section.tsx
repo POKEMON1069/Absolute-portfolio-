@@ -49,7 +49,7 @@ export function StudioSection() {
             </div>
           </div>
 
-          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl ring-1 ring-black/5 shadow-sm shadow-neutral-900/5">
+          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl ring-1 ring-black/5 shadow-elevated">
             {/* Explicit dimensions + lazy loading: no CLS, nothing fetched
                 before it is needed. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -47,7 +47,7 @@ export function HeroIntro() {
           <div className="flex flex-wrap items-center gap-3">
             <a
               href="#work"
-              className="inline-flex min-h-11 items-center rounded-full bg-neutral-900 px-6 text-sm font-medium text-slate-50 shadow-sm shadow-neutral-900/20 ring-1 ring-neutral-900/10 transition-[transform,background-color] duration-200 ease-out motion-safe:hover:-translate-y-0.5 hover:bg-neutral-800 active:translate-y-0 active:bg-neutral-950"
+              className="inline-flex min-h-11 items-center rounded-full bg-neutral-900 px-6 text-sm font-medium text-slate-50 shadow-elevated ring-1 ring-neutral-900/10 transition-[transform,background-color] duration-200 ease-out motion-safe:hover:-translate-y-0.5 hover:bg-neutral-800 active:translate-y-0 active:bg-neutral-950"
             >
               View selected work
             </a>

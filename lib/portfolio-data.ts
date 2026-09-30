@@ -145,7 +145,7 @@ export const footerColumns: Footer16Column[] = [
 export const footerLegalLinks = [
   { label: "Privacy Policy", href: "/brand" }, // TODO: real policy page
   { label: "Terms of Service", href: "/brand" }, // TODO: real terms page
-  { label: "Brand Assets", href: "/brand" },
+  { label: "Brand assets", href: "/brand" },
 ];
 
 export const footerSocials: Footer16Social[] = [
@@ -155,7 +155,19 @@ export const footerSocials: Footer16Social[] = [
   { label: "LinkedIn", href: "https://linkedin.com", icon: "linkedin" }, // TODO
 ];
 
-export const footerCopyright = `©${nbsp}2026 Aayushman Chandra. All rights reserved.`;
+/**
+ * Copyright year, formatted rather than hardcoded.
+ *
+ * `Intl.DateTimeFormat` with a fixed time zone gives a locale-aware value that
+ * is identical on the server and the client, so it can't cause a hydration
+ * mismatch or drift out of date on 1 January.
+ */
+const currentYear = new Intl.DateTimeFormat("en", {
+  year: "numeric",
+  timeZone: "UTC",
+}).format(new Date());
+
+export const footerCopyright = `©${nbsp}${currentYear} Aayushman Chandra. All rights reserved.`;
 
 export const footerTagline =
   "Independent designer and developer building brand systems\nand product interfaces — everything a launch needs,\nunder one roof.";

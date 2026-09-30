@@ -37,8 +37,8 @@ export default function BrandAssetsPage() {
           Brand assets
         </h1>
         <p className="max-w-xl text-sm leading-relaxed font-light text-pretty text-neutral-600 sm:text-base">
-          The two supplied marks, as SVG. Right-click the logo in the site
-          header anywhere on the site for the same shortcuts.
+          Both marks, as SVG. Right-click the logo in the site header anywhere
+          on the site for the same shortcuts.
         </p>
       </header>
 
@@ -46,7 +46,7 @@ export default function BrandAssetsPage() {
         <h2 className="text-lg font-medium tracking-tight">The marks</h2>
 
         <div className="grid gap-6 sm:grid-cols-2">
-          <article className="flex flex-col gap-5 rounded-2xl border border-neutral-200 p-6">
+          <article className="flex flex-col gap-5 rounded-2xl border border-neutral-200 shadow-elevated p-6">
             <div className="flex items-center gap-4">
               <span className="flex size-16 items-center justify-center rounded-xl bg-slate-50 ring-1 ring-black/5">
                 <LogoIcon className="size-10 text-neutral-900" />
@@ -60,7 +60,7 @@ export default function BrandAssetsPage() {
                 Primary mark
               </h3>
               <p className="text-sm font-light text-neutral-600">
-                Four-point spark with notched corners. Use at 24&nbsp;px or
+                A 4-point spark with notched corners. Use at 24&nbsp;px or
                 larger; keep it clear of other elements.
               </p>
             </div>
@@ -76,7 +76,7 @@ export default function BrandAssetsPage() {
             </div>
           </article>
 
-          <article className="flex flex-col gap-5 rounded-2xl border border-neutral-200 p-6">
+          <article className="flex flex-col gap-5 rounded-2xl border border-neutral-200 shadow-elevated p-6">
             <div className="flex items-center gap-4">
               <span className="flex size-16 items-center justify-center rounded-xl bg-slate-50 ring-1 ring-black/5">
                 <PatternMark className="size-10 text-neutral-900" />

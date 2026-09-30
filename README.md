@@ -234,12 +234,19 @@ point them at your real profiles before shipping.
 
 ## 6. Deliberate deviations from the supplied files
 
-Four changes were necessary or clearly better, and each is isolated:
+Five changes were necessary or clearly better, and each is isolated:
 
-1. **`"use client"` added to `components/ui/footer16/index.tsx`.** The block is
-   built on Motion, which cannot run in a React Server Component; without the
-   directive the production build fails at prerender. The other three blocks
-   already shipped with it. Nothing else in the file was touched.
+1. **Three edits inside vendored files — all required, none behavioural.**
+   a. `"use client"` added to `components/ui/footer16/index.tsx`. The block is
+      built on Motion, which cannot run in a React Server Component; without
+      the directive the production build fails at prerender. The other three
+      blocks already shipped with it.
+   b. The same file's `backgroundUrl` constant now points at this site's own
+      `/footer-bg.webp` instead of `assets.watermelon.sh`, so the footer renders
+      the supplied backdrop and doesn't depend on the demo CDN.
+   c. `loading="lazy" decoding="async"` on the orbit hero's `<img>`
+      (`cinematic-orbit-hero.tsx:141`) — eight full-size images that are all
+      off-screen at load. Attribute-only; delete the two lines to revert.
 2. **`components/ui/webgl-error-boundary.tsx` written.** The carousel imports
    `{ WebGLErrorBoundary, WebGLFallback }` from
    `@/components/ui/webgl-error-boundary`, which wasn't part of the paste; the
@@ -348,6 +355,84 @@ the vendored blocks were left intact — see the accepted deviations below.
   right-clicking the nav logo, which opens a `role="menu"` brand-assets popover
   with download + copy-SVG actions.
 
+### Second pass — the full guideline text
+
+The first pass used the abridged review checklist; this one works through the
+complete guidelines, including the sections that only appear in the long form
+(Forms, Performance, Design, Copywriting).
+
+**Contrast, now measured with APCA.** `npm run check:contrast`
+(`scripts/check-contrast.mjs`) implements APCA-W3 0.1.9 plus WCAG 2 ratios and
+composites Tailwind's `/NN` alpha colours before measuring. It found 8 failures
+on the first run; all 18 enforced pairs now pass:
+
+| Surface | Before | After | APCA min |
+| --- | --- | --- | --- |
+| Contact eyebrow label | zinc-400 — Lc 52 | **zinc-300 — Lc 80** | 60 |
+| Contact social links, location | zinc-400 — Lc 52 | **zinc-300 — Lc 80** | 75 |
+| Contact h2 second line | zinc-500 — Lc 28 | **zinc-400 — Lc 52** | 45 |
+| Brand-menu hint glyphs | zinc-500 — Lc 28 | **zinc-400 — Lc 52** | 30 |
+| Footer links | zinc-300/70 — Lc 46 | **#d4d4d8 — Lc 80** | 75 |
+| Footer tagline, copyright | zinc-400/76 — Lc 33 | **#cccccc — Lc 76** | 75 |
+
+The footer's two rows are the only place a vendored block's *appearance* is
+overridden, and it is one unlayered rule pair in `globals.css` (`footer p`,
+`footer li a`) with the measured values in the comment — delete that block to
+restore Footer16's exact delivered opacities. Its structure, props, animation
+and layout are untouched, and every other footer colour (column titles at
+Lc 104, social icons at Lc 52) was already fine.
+
+**Hit targets.** The guideline wants ≥ 24px for fine pointers and ≥ 44px on
+touch. Three vendored controls fell short and are now corrected through the
+same unlayered block, using transparent `::after` layers so nothing moves:
+
+| Control | Delivered | Now |
+| --- | --- | --- |
+| Footer links (columns, legal) | `min-h-5` (20px) | 24px fine / 44px coarse |
+| Footer social icons | 40 × 40px | 24/44px min |
+| Nav hamburger below 768px | 40 × 40px | 44px on touch |
+| Carousel "Close" (13px text) | ~13px tall | ≥ 24px fine / 44px coarse |
+
+**Loading states.** The copy-SVG action now follows the minimum-duration rule:
+the spinner is delayed by 150 ms (so an instant copy never flashes) and held for
+at least 350 ms (so it never blinks out). The button keeps its "Copy SVG" label
+throughout, sets `aria-busy`, and reports through a polite live region.
+
+**Design details.** Layered shadows replaced single-layer ones — a contact
+shadow plus a wide ambient layer, as `--shadow-elevated` /
+`--shadow-elevated-inverse` tokens (dark surfaces get a stronger pair). Nested
+radii are now concentric: the brand menu is `rounded-xl` (12px) with `p-1.5`
+(6px) padding and `rounded-md` (6px) children. Borders stay semi-transparent and
+paired with shadows for edge clarity.
+
+**Copywriting.** Sentence case throughout (a personal marketing page), no
+straight quotes, `&` over "and" in "Designer & Developer", numerals for counts
+("4-point spark", "40+ products"), action-specific labels ("View selected
+work", "Request the full case study", "Download SVG" — not "Continue"), error
+copy that names the exit ("Couldn't copy the primary mark — use the download
+link instead"), and the brand name is glued with a non-breaking space in the
+footer wordmark and brand row.
+
+One deliberate departure: the portfolio's copy is written in the **first
+person** ("I design and build…"). The guideline's second-person preference is
+aimed at product marketing; a personal portfolio's voice is the product.
+
+**Performance.** The eight Cinematic Orbit hero images are off-screen at load
+and now carry `loading="lazy" decoding="async"` (edit 3 in §6). Nothing
+above the fold is raster, so there is no `fetchpriority` work to do; the only
+preloads are the three `preconnect`s. The nav overlay's two stills are inside a
+`position: fixed` panel that always intersects the viewport, so lazy loading
+cannot defer them — they are the one eager fetch, and they are small (900px
+JPEGs).
+
+**Where the guidelines don't apply.** No `<input>`, `<textarea>`, `<select>`,
+`<form>`, `<video>`, animated GIF, tooltip, toast, modal, date/number display
+or virtualizable list exists on the site — so the entire Forms section, the
+input-related Interactions rules (paste, autofocus, mobile input size,
+hydration-safe inputs), font preload/subset, video-over-image, chart palettes,
+and large-list virtualization are N/A rather than skipped. Contact is a
+`mailto:` link, which needs no validation, error placement or submission state.
+
 ### Accepted deviations (vendored block interiors)
 
 Deliberately left as delivered, per "use each component exactly as specified":
@@ -361,20 +446,40 @@ Deliberately left as delivered, per "use each component exactly as specified":
 | `components/ui/liquid-glass-carousel.tsx` | Canvas is `aria-hidden`; gesture control has no equivalent tap target inside the canvas | The wrapper is a labelled `role="region"` with a polite live region, and `←`/`→`/`Esc` are wired; a click on any panel also works. |
 | `components/ui/footer16/index.tsx` | Reveals don't self-check `prefers-reduced-motion` | Handled from outside via `<MotionConfig reducedMotion="user">`. |
 
-Two edits *were* made inside a vendored file, both required and both noted in
-§6: the `"use client"` directive in `footer16/index.tsx`, and its
-`backgroundUrl` constant now pointing at this site's own `/footer-bg.webp`
-instead of the demo CDN (so it matches `footerBackgroundImage`).
+Three edits *were* made inside vendored files, all required, all noted in §6:
+the `"use client"` directive in `footer16/index.tsx`; its `backgroundUrl`
+constant now pointing at this site's own `/footer-bg.webp` instead of the demo
+CDN (matching `footerBackgroundImage`); and the `loading="lazy"`
+`decoding="async"` pair on the orbit hero's `<img>` at
+`cinematic-orbit-hero.tsx:141`. The four blocks' logic, props, markup structure
+and layout are otherwise untouched — every other adaptation lives in
+`globals.css`, `layout.tsx`, the portfolio wrappers, or runtime DOM hooks.
 
-### Verified by hand
+Additional accepted deviations found in this pass, left as delivered:
 
-- Footer small text on the darkened backdrop: ≈ **4.7:1** (zinc-400/76 over
-  `rgba(9,10,14,0.9)`), so it clears AA. Link hovers *increase* contrast.
-- Contact-block grey text on `#0b0b0e`: zinc-400 → **6.3:1**; the `zinc-500`
-  span is large display text (≥ 4xl), clearing the 3:1 large-text threshold.
-- Light sections: `neutral-600` on `#f8fafc`/white → **7.4–7.8:1**. Small
-  uppercase labels were raised from `neutral-500` (4.47:1 — just under AA) to
-  `neutral-600` because of this check.
+| Location | Finding | Why it's acceptable |
+| --- | --- | --- |
+| `liquid-glass-carousel.tsx` (entry sequence) | Input is locked for the ~4.6s rise-and-grow intro, so the animation can't be interrupted | The carousel mounts only 400px before it is visible, so the lock is normally over before a visitor can reach it; reduced-motion users skip the entry entirely (`entryOn = entry && !reduced`). Pass `entry={false}` to remove the lock. |
+| `liquid-glass-carousel.tsx` (shimmer) | Continuous `uShimmer` loop | A muted, non-essential decorative loop, exactly the autoplay case the guideline allows, and it is switched off under `prefers-reduced-motion`. |
+| `immersive-full-screen-nav.tsx:674` | Two 900px stills load while the panel is closed | The panel is `position: fixed`, so it always intersects the viewport — `loading="lazy"` would not defer them. |
+| Brand-assets popover | Pointer-only trigger; panel/scroll/step state is not in the URL | The logo's activation navigates, so `aria-haspopup`/`aria-expanded` would misdescribe it. Everything the menu offers is keyboard-reachable at `/brand` (footer link), the menu is fully keyboard-operable once open, and the transient popover is not addressable state — the sections themselves stay deep-linkable (`#work`, `#about`, `#contact`). |
+| Empty/sparse states | No skeleton for the carousel's first paint | The mount box is reserved at exact size (no CLS), the block animates its own entry, and a skeleton cannot mirror a WebGL scene. Empty `projects`/`capabilities`/`columns` arrays render nothing rather than a broken shell. |
+
+**Not verifiable in this environment.** Responsive coverage at mobile/laptop/
+ultra-wide, iOS Low Power Mode and macOS Safari behaviour, and the 50%-zoom
+ultra-wide check all need a real browser — this sandbox has no headless Chrome
+and its egress is allowlisted, so cross-origin media (Unsplash, the R2 image
+CDN) can't be fetched or screenshotted here either. Layout is built to hold at
+those widths (containers cap at `max-w-7xl`, vw-based type, wrapping grids), but
+treat the visual check as yours to run.
+
+### Verified mechanically
+
+`npm run check:contrast` — APCA-W3 0.1.9 and WCAG 2, alpha-composited. Current
+result: **18/18 enforced pairs pass**; the three as-delivered footer opacities
+are printed as informational rows so the regression is documented rather than
+hidden. Every light-surface pair is 7.5:1 or better (Lc 84–104); the dark
+surfaces run 7.7:1–17.9:1 (Lc 52–100).
 
 `npm run lint`, `npx tsc --noEmit` and `npm run build` all pass. The carousel
 logs one benign WebGL shader-compile note (a loop-varying-derivative warning
