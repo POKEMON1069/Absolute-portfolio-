@@ -1,62 +1,95 @@
-# Absolute Portfolio
+# Aayushman Chandra — Portfolio
 
-一个白底、极简、以「彩色文件夹」为主视觉的个人作品集网站。
-单页静态站点 —— 无框架、无构建步骤、无外部 CDN 依赖，双击 `index.html` 即可打开。
+A minimal, white-background personal portfolio whose hero is a row of clay-like 3D folders.
+Hover (or tap, on a phone) a folder and three project cards fan out of it; click a card and it
+expands into an animated lightbox with keyboard, dot and button navigation.
 
-## 结构
+Built with **React 18 + TypeScript + Vite + Tailwind CSS v4**, following the shadcn/ui
+project structure (`components.json`, `src/components/ui/*`, `@/lib/utils`).
+
+## Stack
 
 ```
-index.html      # 页面结构（Hero / 目录 / 关于 / 联系）
-styles.css      # 全部样式（含自托管字体声明）
-script.js       # 作品数据 + 筛选 / 弹窗 / 菜单逻辑
-assets/
-  hero-folders.png       # Hero 3D 文件夹主视觉
-  fonts/                 # 自托管字体（Inter + 思源黑体子集，含中文）
+React 18 · TypeScript · Vite 6
+Tailwind CSS v4 (@tailwindcss/vite) + tw-animate-css
+lucide-react icons · clsx + tailwind-merge (cn helper)
 ```
 
-## 如何改成你自己的
+## Structure
 
-**1. 作品列表** — 打开 `script.js`，编辑顶部的 `PROJECTS` 数组：
-
-```js
-{ id:1, cat:"brand", catLabel:"品牌视觉", year:"2025",
-  title:"项目名称", desc:"一句话介绍", g:"g1", tag:"BRAND IDENTITY" }
+```
+index.html                     # shell: #root, fonts, zh-CN default lang
+components.json                # shadcn config — style "new-york", css: src/index.css
+src/
+  main.tsx                     # React entry
+  App.tsx                      # category state, sticky header, + menu, sections
+  index.css                    # Tailwind 4 import, @theme inline tokens, folder geometry
+  components/
+    hero.tsx                   # wordmark, 4 discipline folders, grey bar
+    works.tsx                  # filter pills + project grid
+    about.tsx                  # About (bio/facts/interests) + Footer (contact)
+    ui/
+      3d-folder.tsx            # AnimatedFolder · ProjectCard · ImageLightbox
+      button.tsx card.tsx badge.tsx
+  data/
+    site.ts                    # ✏️ name, email, skills, interests, inspirations
+    projects.ts                # ✏️ the 5 projects + categories
+  hooks/use-reveal.ts          # IntersectionObserver scroll-reveal
+  lib/utils.ts                 # cn()
+public/assets/
+  projects/                    # 5 project images (720×960, 3:4)
+  fonts/                       # self-hosted Inter + Noto Sans SC
 ```
 
-- `cat` 只能是 `brand` / `ops` / `aigc`（对应三个筛选分类）
-- `year` 建议保留 2022–2025，否则顶部文件夹筛选会筛不到
-- `g` 是卡片配色，可选 `g1`–`g9`；`tag` 显示在卡片左下角
-- 想放真实作品图时：把 `.card-art` 里的 `.art-ring` / `.art-no` 去掉，给 `.card-art`
-  加 `background-image:url("assets/xxx.jpg");background-size:cover`
+## Editing it
 
-**2. 名字与联系方式** — 在 `index.html` 里搜索并替换：
+**Projects** — `src/data/projects.ts`. Each entry:
 
-- `Designer Daishu` → 你的名字（出现在顶栏、Hero、页脚）
-- `hello@example.com` → 你的邮箱
-- `小红书号：4110341793` → 你的社交账号
-- `<title>` 与 `<meta name="description">` → 用于分享与搜索
+```ts
+{ id, image: "/assets/projects/xxx.jpg", title, desc, role,
+  stack: ["React", "TypeScript"], category: "product" }
+```
 
-**3. 关于我** — 修改 `index.html` 中 `.about-body` 里的文案与 `.skills` 技能标签。
+`category` must be one of `product | uiux | hardware | web` — those four values drive the
+hero folders *and* the filter pills. Each folder shows the first three projects in its category.
 
-## 交互
+**Your details** — `src/data/site.ts`: name, short name, email (currently a placeholder),
+grade, location, club, interests, skills, inspirations, goal.
 
-| 操作 | 效果 |
+**Colours** — `src/index.css`. Site tokens live in `:root` under `@theme inline`; the four folder
+palettes are in `hero.tsx` as oklch values (`--folder-back/-front/-tab` per folder).
+
+## Interaction
+
+| Action | Result |
 | --- | --- |
-| 点击 Hero 里任一文件夹 | 按对应年份筛选作品并滚动到目录 |
-| 点击分类按钮 / 年份 | 组合筛选，右上角编号变为 `#年份` |
-| 点击作品卡片 | 打开详情弹窗（Esc / 点击遮罩关闭） |
-| 点击右上角 `+` | 展开导航菜单 |
+| Hover a hero folder (tap on touch) | up to 3 cards fan out; tap again to close |
+| Click a fanned card | lightbox opens, growing from that card |
+| `←` `→`, arrows, or dots | move between cards in the same folder |
+| `Esc` / backdrop / ✕ | close the lightbox |
+| "View all Product" | jumps to the index filtered to that category |
+| `+` in the header | navigation menu |
 
-## 部署
-
-纯静态文件，直接托管即可：
-
-- **GitHub Pages**：Settings → Pages → 选择该分支根目录
-- **Netlify / Vercel**：导入仓库，无需构建命令，发布目录填 `/`
-
-## 本地预览
+## Local development
 
 ```bash
-python3 -m http.server 8000
-# 打开 http://localhost:8000
+npm install
+npm run dev        # http://localhost:8000
+npm run build      # → dist/
+npm run typecheck  # tsc -b --noEmit
 ```
+
+## Deploy
+
+Any static host. For GitHub Pages, publish `dist/` after `npm run build`
+(Vite `base` is `/`, so use a custom domain or a root-level user page unless you set `base`).
+
+## Notes
+
+- The component was delivered in `src/components/ui/` (not a root-level `components/ui/`),
+  because `components.json` aliases `@/components` → `src/components`. That folder is what
+  shadcn's CLI treats as the default destination for `npx shadcn@latest add …`, so future
+  components land in the same place.
+- Project thumbnails are locally generated artwork standing in for real screenshots — the
+  deployed environment blocks external image hosts (Unsplash included). Drop your own 3:4
+  images into `public/assets/projects/` and point `projects.ts` at them.

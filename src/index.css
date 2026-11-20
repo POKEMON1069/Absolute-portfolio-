@@ -1,0 +1,246 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-folder-back: var(--folder-back);
+  --color-folder-front: var(--folder-front);
+  --color-folder-tab: var(--folder-tab);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --font-sans: "Inter", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ── Self-hosted fonts (subset, offline-safe) ───────────────── */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/fonts/inter-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/assets/fonts/inter-latin-500-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/assets/fonts/inter-latin-600-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Noto Sans SC";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/fonts/noto-sans-sc-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Noto Sans SC";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/assets/fonts/noto-sans-sc-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Noto Sans SC";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/assets/fonts/noto-sans-sc-700.woff2") format("woff2");
+}
+
+:root {
+  --radius: 0.75rem;
+
+  /* Site palette: near-white paper, near-black ink — matches the reference design */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.16 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.16 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.16 0 0);
+  --primary: oklch(0.16 0 0);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.25 0 0);
+  --muted: oklch(0.965 0 0);
+  --muted-foreground: oklch(0.55 0 0);
+  --accent: oklch(0.56 0.2 285); /* the purple of the front folder */
+  --accent-foreground: oklch(0.98 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.925 0 0);
+  --input: oklch(0.925 0 0);
+  --ring: oklch(0.56 0.2 285);
+
+  /* Folder colours, one set per year tab (see .hero-folder-* below) */
+  --folder-back: oklch(0.66 0.2 285);
+  --folder-front: oklch(0.62 0.21 284);
+  --folder-tab: oklch(0.7 0.17 284);
+
+  /* hero art */
+  --ink: #111;
+  --line: #ececec;
+  --pill: #f3f3f3;
+}
+
+.dark {
+  --background: oklch(0.14 0 0);
+  --foreground: oklch(0.96 0 0);
+  --card: oklch(0.18 0 0);
+  --card-foreground: oklch(0.96 0 0);
+  --popover: oklch(0.18 0 0);
+  --popover-foreground: oklch(0.96 0 0);
+  --primary: oklch(0.96 0 0);
+  --primary-foreground: oklch(0.16 0 0);
+  --secondary: oklch(0.24 0 0);
+  --secondary-foreground: oklch(0.96 0 0);
+  --muted: oklch(0.24 0 0);
+  --muted-foreground: oklch(0.65 0 0);
+  --accent: oklch(0.68 0.17 285);
+  --accent-foreground: oklch(0.14 0 0);
+  --border: oklch(0.28 0 0);
+  --input: oklch(0.28 0 0);
+  --ring: oklch(0.68 0.17 285);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--ink);
+    color: #fff;
+  }
+}
+
+@layer components {
+  /* Animated folder geometry — overridable from any ancestor.
+     Kept in CSS (not inline styles) so the cascade works. */
+  .folder-stage,
+  .folder-card {
+    --stage-h: 150px;
+    --stage-w: 190px;
+    --folder-w: 8rem;
+    --folder-h: 6rem;
+    --fan-y: -92px;
+    --fan-x: 62px;
+    --card-w: 5rem;
+    --card-h: 7rem;
+    /* consumed by AnimatedFolder itself (minWidth/minHeight inline) */
+    --folder-min: 200px;
+    --folder-min-h: 226px;
+  }
+  @media (max-width: 639px) {
+    .folder-stage,
+    .folder-card {
+      --stage-h: 132px;
+      --stage-w: 132px;
+      --folder-w: 5.25rem;
+      --folder-h: 3.9rem;
+      --fan-y: -50px;
+      --fan-x: 40px;
+      --card-w: 3.1rem;
+      --card-h: 4.4rem;
+      --folder-min: 0px;
+      --folder-min-h: 214px;
+    }
+  }
+  @media (min-width: 640px) and (max-width: 1023px) {
+    .folder-stage,
+    .folder-card {
+      --stage-h: 140px;
+      --stage-w: 178px;
+      --folder-w: 7rem;
+      --folder-h: 5.25rem;
+      --fan-y: -82px;
+      --fan-x: 54px;
+      --card-w: 4.2rem;
+      --card-h: 5.9rem;
+      --folder-min: 170px;
+      --folder-min-h: 214px;
+    }
+  }
+
+  /* Hero wordmark */
+  .hero-title {
+    font-size: clamp(64px, 13vw, 150px);
+    font-weight: 500;
+    letter-spacing: -0.045em;
+    line-height: 1;
+  }
+  .hero-sub {
+    font-size: clamp(14px, 2vw, 18px);
+    letter-spacing: 0.06em;
+  }
+  .toc-pill {
+    background: var(--pill);
+    border-radius: 999px;
+    padding: 6px 18px;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: #555;
+    white-space: nowrap;
+  }
+}
+
+/* Scroll-reveal, only when JS is active (no blank content if JS fails) */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+.js .reveal.in {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
