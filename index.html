@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Portfolio — Designer Daishu · 2025 Work Collection</title>
+<meta name="description" content="Designer Daishu 2025-2026 年度部分工作作品集 — 品牌视觉 / 运营视觉 / AIGC" />
+<meta name="theme-color" content="#ffffff" />
+<link rel="preload" href="assets/fonts/inter-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/noto-sans-sc-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ══════════ TOP BAR ══════════ -->
+<header class="topbar">
+  <a class="brand" href="#top">Designer Daishu</a>
+  <span class="pill">2025 WORK COLLECTION</span>
+  <button class="plus-btn" id="plusBtn" aria-label="打开菜单" aria-expanded="false"><span>+</span></button>
+
+  <nav class="menu" id="menu" hidden>
+    <a href="#works">目录 · Works</a>
+    <a href="#about">关于 · About</a>
+    <a href="#contact">联系 · Contact</a>
+  </nav>
+</header>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero" id="top">
+  <h1 class="hero-title">Portfolio</h1>
+  <p class="hero-sub">2025-2026年度 部分工作作品集</p>
+
+  <!-- 3D clay folders (generated art) with real hotspots on top -->
+  <div class="folders">
+    <div class="folders-art" role="img" aria-label="彩色文件夹：2022 至 2025 年作品">
+      <img src="assets/hero-folders.png" alt="" width="678" height="313" />
+      <button class="hotspot hs-orange" data-year="2022" title="2022 年作品" aria-label="2022 年作品"><span>2022</span></button>
+      <button class="hotspot hs-yellow" data-year="2023" title="2023 年作品" aria-label="2023 年作品"><span>2023</span></button>
+      <button class="hotspot hs-cream"  data-year="2025" title="2025 年作品" aria-label="2025 年部分项目"><span>2025</span></button>
+      <button class="hotspot hs-purple" data-year="2025" title="2025 年作品" aria-label="2025 年作品"><span>2025</span></button>
+      <button class="hotspot hs-grey"   data-year="2024" title="2024 年作品" aria-label="2024 年作品"><span>2024</span></button>
+      <button class="hotspot hs-blue"   data-year="2024" title="2024 年作品" aria-label="2024 年作品"><span>2024</span></button>
+
+      <!-- paper card tucked behind the front folder -->
+      <a class="paper" href="#works">
+        <strong>PART PROJECTS</strong>
+        <span>品牌视觉</span>
+        <span>运营视觉</span>
+        <span>AIGC</span>
+      </a>
+    </div>
+  </div>
+  <div class="grey-bar"></div>
+  <p class="hint">点击文件夹，按年份筛选作品 ↓</p>
+</section>
+
+<!-- ══════════ DIRECTORY / WORKS ══════════ -->
+<section class="works" id="works">
+  <div class="section-head">
+    <span class="toc">• 目录</span>
+    <span class="pill">2025 WORK COLLECTION</span>
+    <span class="hash" id="hash">#00</span>
+  </div>
+
+  <h2 class="categories">品牌视觉&nbsp;&nbsp;-&nbsp;&nbsp;运营视觉&nbsp;&nbsp;-&nbsp;&nbsp;A&nbsp;I&nbsp;G&nbsp;C</h2>
+
+  <div class="filters" aria-label="作品分类筛选">
+    <button class="filter active" data-filter="all">全部 All</button>
+    <button class="filter" data-filter="brand">品牌视觉</button>
+    <button class="filter" data-filter="ops">运营视觉</button>
+    <button class="filter" data-filter="aigc">AIGC</button>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div class="years" id="years" aria-label="按年份筛选">
+    <button class="year-chip active" data-year="all">全部年份</button>
+    <button class="year-chip" data-year="2025">2025</button>
+    <button class="year-chip" data-year="2024">2024</button>
+    <button class="year-chip" data-year="2023">2023</button>
+    <button class="year-chip" data-year="2022">2022</button>
+  </div>
+
+  <div class="grid" id="grid"><!-- rendered by script.js --></div>
+  <p class="empty" id="empty" hidden>这个年份 / 分类下暂无作品，换一个试试。</p>
+</section>
+
+<!-- ══════════ ABOUT ══════════ -->
+<section class="about" id="about">
+  <div class="section-head">
+    <span class="toc">• 关于</span>
+    <span class="pill">ABOUT ME</span>
+    <span class="hash">#01</span>
+  </div>
+  <div class="about-body reveal">
+    <p class="about-lead">你好，我是 Designer Daishu，<br/>一名专注于品牌与视觉传达的设计师。</p>
+    <p class="about-text">擅长品牌视觉体系、运营视觉与 AIGC 视觉创作。相信好的设计是克制的——用最少的元素，传达最准确的信息。2025-2026 年度，本页收录了部分工作作品。</p>
+    <ul class="skills">
+      <li>品牌视觉 · Brand Identity</li>
+      <li>运营视觉 · Campaign / Ops Visual</li>
+      <li>AIGC · AI-Generated Visuals</li>
+      <li>版式与字体 · Typography</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER / CONTACT ══════════ -->
+<footer class="footer" id="contact">
+  <div class="section-head">
+    <span class="toc">• 联系</span>
+    <span class="pill">CONTACT</span>
+    <span class="hash">#02</span>
+  </div>
+  <p class="footer-name">Designer Da袋鼠</p>
+  <p class="footer-sub">小红书号：4110341793 · 欢迎合作 / Welcome to collaborate</p>
+  <a class="mail" href="mailto:hello@example.com">hello@example.com</a>
+  <p class="copyright">© 2025-2026 Designer Daishu — Portfolio. Built with HTML / CSS / JS.</p>
+</footer>
+
+<!-- project modal -->
+<div class="modal" id="modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" id="modalClose" aria-label="关闭">×</button>
+    <div class="modal-art" id="modalArt"></div>
+    <div class="modal-body">
+      <span class="modal-cat" id="modalCat"></span>
+      <h3 id="modalTitle"></h3>
+      <p id="modalDesc"></p>
+      <p class="modal-meta" id="modalMeta"></p>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
